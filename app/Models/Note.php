@@ -17,4 +17,8 @@ class Note extends Model
         'birthday',
         'photo',
     ];
+
+    protected $dates = [
+        'birthday',
+    ];
 }
