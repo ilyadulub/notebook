@@ -17,7 +17,7 @@ class NoteController extends Controller
 {
     public function index(): ResourceCollection
     {
-        return NoteResource::collection(Note::paginate(2));
+        return NoteResource::collection(Note::paginate());
     }
 
     public function store(NoteRequest $request, NoteService $noteService): JsonResource

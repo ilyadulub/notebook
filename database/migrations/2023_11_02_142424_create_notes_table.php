@@ -17,8 +17,8 @@ class CreateNotesTable extends Migration
             $table->id();
             $table->string('full_name', 150);
             $table->string('company', 50)->nullable();
-            $table->string('phone', 12)->unique();
-            $table->string('email', 50)->unique();
+            $table->string('phone', 10)->unique();
+            $table->string('email', 255)->unique();
             $table->date('birthday')->nullable();
             $table->string('photo')->nullable();
             $table->timestamps();

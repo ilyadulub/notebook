@@ -40,13 +40,13 @@ class NoteRequest extends FormRequest
             'phone' => [
                 'required',
                 'digits:10',
-                //'unique:notes,phone,' . $noteId,
+                'unique:notes,phone,' . $noteId,
             ],
             'email' => [
                 'required',
                 'email:rfc',
                 'max:50',
-                //'unique:notes,email,' . $noteId,
+                'unique:notes,email,' . $noteId,
             ],
             'birthday' => [
                 'nullable',
