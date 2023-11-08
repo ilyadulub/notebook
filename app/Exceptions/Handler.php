@@ -46,7 +46,7 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $e)
     {
         $e = $this->replaceErrorMessages($request, $e);
-
+    
         return parent::render($request, $e);
     }
 
