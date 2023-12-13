@@ -22,7 +22,7 @@ class NoteController extends Controller
 
     public function store(NoteRequest $request, NoteService $noteService): JsonResource
     {
-        $note = $noteService->createNote($request);
+        $note = $noteService->createNote($request->validated());
 
         return new NoteResource($note);
     }
@@ -34,7 +34,7 @@ class NoteController extends Controller
 
     public function update(Note $note, NoteRequest $request, NoteService $noteService): JsonResource
     {
-        $note = $noteService->updateNote($note, $request);
+        $note = $noteService->updateNote($note, $request->validated());
 
         return new NoteResource($note);
     }

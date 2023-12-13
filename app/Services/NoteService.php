@@ -5,45 +5,54 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Note;
-use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class NoteService
 {
-    public function createNote(Request $request): Note
+    public function createNote(array $data): Note
     {
-        $prepared = $this->prepareData($request->validated(), $this->uploadFile($request));
+        return DB::transaction(function () use ($data) {
+            $prepared = $this->prepareData($data, $this->uploadFile($data['photo_file']));
 
-        $note = Note::create($prepared);
+            $note = Note::create($prepared);
 
-        return $note;
+            return $note;
+        });
     }
 
-    public function updateNote(Note $note, Request $request): Note
+    public function updateNote(Note $note, array $data): Note
     {
-        $prepared = $this->prepareData($request->validated(), $this->uploadFile($request));
+        return DB::transaction(function () use ($note, $data) {
+            $prepared = $this->prepareData($data, $this->uploadFile($data['photo_file']));
 
-        $note->update($prepared);
+            $note->update($prepared);
 
-        return $note;
+            return $note;
+        });
     }
 
     public function deleteNote(Note $note): void
     {
-        $this->deleteFile($note->photo);
+        DB::transaction(function () use ($note) {
+            $pathToPhoto = $note->photo;
 
-        $note->delete();
+            $note->delete();
+
+            $this->deleteFile($pathToPhoto);
+        });
     }
 
     /** Upload the photo for the note */
-    protected function uploadFile(Request $request): ?string
+    protected function uploadFile(UploadedFile $file): ?string
     {
-        if (!$request->hasFile('photo_file')) {
+        if (!$file) {
             return null;
         }
 
         $filePath = Storage::disk('images')
-            ->putFile('photos', $request->file('photo_file'));
+            ->putFile('photos', $file);
 
         return ($filePath !== false) ? $filePath : null;
     }
